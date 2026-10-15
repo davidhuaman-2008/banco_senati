@@ -1,6 +1,6 @@
     <?php
     // Establecer los datos de conexión
-    $servername = "localhost:3315"; // Cambia esto si tu servidor MySQL está en un puerto diferente
+    $servername = "localhost:3306"; // Cambia esto si tu servidor MySQL está en un puerto diferente
     $username = "root"; // Cambia esto si tu nombre de usuario de MySQL es diferente
     $password = ""; // Cambia esto si tienes una contraseña configurada para tu usuario de MySQL
     $dbname = "banco_senati";

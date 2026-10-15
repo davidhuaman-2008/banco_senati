@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.4
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-09-2017 a las 11:28:48
--- Versión del servidor: 5.7.14
--- Versión de PHP: 5.6.25
+-- Tiempo de generación: 15-10-2026 a las 00:52:59
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -23,23 +24,28 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cliente`
+-- Estructura de tabla para la tabla `clientes`
 --
 
-CREATE TABLE `cliente` (
-  `n_cuenta` int(11) NOT NULL,
-  `nombre` varchar(30) NOT NULL,
-  `apellido` varchar(40) NOT NULL,
-  `dni` varchar(8) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `clientes` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `n_cuenta` varchar(20) NOT NULL,
+  `nombre` varchar(60) NOT NULL,
+  `apellido` varchar(60) NOT NULL,
+  `dni` char(8) NOT NULL,
+  `email` varchar(120) DEFAULT NULL,
+  `telefono` varchar(15) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `cliente`
+-- Volcado de datos para la tabla `clientes`
 --
 
-INSERT INTO `cliente` (`n_cuenta`, `nombre`, `apellido`, `dni`) VALUES
-(1001, 'daniel', 'calzada', '25805514'),
-(1002, 'cecilia', 'arias', '09903285');
+INSERT INTO `clientes` (`id`, `n_cuenta`, `nombre`, `apellido`, `dni`, `email`, `telefono`, `created_at`, `updated_at`) VALUES
+(1, '1001', 'Daniel', 'Calzada', '25805514', 'daniel@example.com', '999111222', '2026-10-15 05:13:59', '2026-10-15 05:13:59'),
+(2, '1002', 'Cecilia', 'Arias', '09903285', 'cecilia@example.com', '999333444', '2026-10-15 05:13:59', '2026-10-15 05:13:59');
 
 -- --------------------------------------------------------
 
@@ -48,21 +54,22 @@ INSERT INTO `cliente` (`n_cuenta`, `nombre`, `apellido`, `dni`) VALUES
 --
 
 CREATE TABLE `depositos` (
-  `cod_dep` int(11) NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
+  `cliente_id` int(10) UNSIGNED NOT NULL,
   `fecha` date NOT NULL,
-  `monto` int(11) NOT NULL,
-  `cliente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `monto` decimal(12,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `depositos`
 --
 
-INSERT INTO `depositos` (`cod_dep`, `fecha`, `monto`, `cliente`) VALUES
-(1, '2017-02-01', 1000, 1001),
-(2, '2017-02-02', 500, 1001),
-(3, '2017-02-01', 2500, 1002),
-(4, '2017-02-02', 500, 1002);
+INSERT INTO `depositos` (`id`, `cliente_id`, `fecha`, `monto`, `created_at`) VALUES
+(1, 1, '2017-02-01', 1000.00, '2026-10-15 05:13:59'),
+(2, 1, '2017-02-02', 500.00, '2026-10-15 05:13:59'),
+(3, 2, '2017-02-01', 2500.00, '2026-10-15 05:13:59'),
+(4, 2, '2017-02-02', 500.00, '2026-10-15 05:13:59');
 
 -- --------------------------------------------------------
 
@@ -71,20 +78,21 @@ INSERT INTO `depositos` (`cod_dep`, `fecha`, `monto`, `cliente`) VALUES
 --
 
 CREATE TABLE `pago_servicios` (
-  `cod_pag` int(11) NOT NULL,
-  `concepto` varchar(30) NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
+  `cliente_id` int(10) UNSIGNED NOT NULL,
+  `concepto` varchar(100) NOT NULL,
   `fecha` date NOT NULL,
-  `monto` int(11) NOT NULL,
-  `cliente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `monto` decimal(12,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pago_servicios`
 --
 
-INSERT INTO `pago_servicios` (`cod_pag`, `concepto`, `fecha`, `monto`, `cliente`) VALUES
-(1, 'pago de telefono', '2017-02-20', 75, 1001),
-(2, 'pago del agua', '2017-02-27', 95, 1002);
+INSERT INTO `pago_servicios` (`id`, `cliente_id`, `concepto`, `fecha`, `monto`, `created_at`) VALUES
+(1, 1, 'Pago de teléfono', '2017-02-20', 75.00, '2026-10-15 05:13:59'),
+(2, 2, 'Pago del agua', '2017-02-27', 95.00, '2026-10-15 05:13:59');
 
 -- --------------------------------------------------------
 
@@ -93,21 +101,22 @@ INSERT INTO `pago_servicios` (`cod_pag`, `concepto`, `fecha`, `monto`, `cliente`
 --
 
 CREATE TABLE `retiros` (
-  `cod_ret` int(11) NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
+  `cliente_id` int(10) UNSIGNED NOT NULL,
   `fecha` date NOT NULL,
-  `monto` int(11) NOT NULL,
-  `cliente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `monto` decimal(12,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `retiros`
 --
 
-INSERT INTO `retiros` (`cod_ret`, `fecha`, `monto`, `cliente`) VALUES
-(1, '2017-02-18', 100, 1001),
-(2, '2017-02-25', 100, 1001),
-(3, '2017-02-18', 500, 1002),
-(4, '2017-02-25', 100, 1002);
+INSERT INTO `retiros` (`id`, `cliente_id`, `fecha`, `monto`, `created_at`) VALUES
+(1, 1, '2017-02-18', 100.00, '2026-10-15 05:13:59'),
+(2, 1, '2017-02-25', 100.00, '2026-10-15 05:13:59'),
+(3, 2, '2017-02-18', 500.00, '2026-10-15 05:13:59'),
+(4, 2, '2017-02-25', 100.00, '2026-10-15 05:13:59');
 
 -- --------------------------------------------------------
 
@@ -116,82 +125,100 @@ INSERT INTO `retiros` (`cod_ret`, `fecha`, `monto`, `cliente`) VALUES
 --
 
 CREATE TABLE `usuarios` (
-  `id` int(11) NOT NULL,
-  `usuario` varchar(40) NOT NULL,
-  `password` varchar(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(10) UNSIGNED NOT NULL,
+  `usuario` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `rol` enum('admin','empleado','obrero') DEFAULT 'empleado',
+  `activo` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `usuario`, `password`) VALUES
-(1, 'obrero', 'obre'),
-(2, 'empleado', 'emple');
+INSERT INTO `usuarios` (`id`, `usuario`, `password`, `rol`, `activo`, `created_at`, `updated_at`) VALUES
+(2, 'admin', '$2y$10$wlhcR.9plNznq5umVqjY/edFC7RQ9dulCW2mNZpL0BMCzCbjaFbuO', 'admin', 1, '2026-10-15 05:28:50', '2026-10-15 05:28:50');
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `cliente`
+-- Indices de la tabla `clientes`
 --
-ALTER TABLE `cliente`
-  ADD PRIMARY KEY (`n_cuenta`);
+ALTER TABLE `clientes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `n_cuenta` (`n_cuenta`),
+  ADD UNIQUE KEY `dni` (`dni`),
+  ADD KEY `idx_dni` (`dni`);
 
 --
 -- Indices de la tabla `depositos`
 --
 ALTER TABLE `depositos`
-  ADD PRIMARY KEY (`cod_dep`),
-  ADD KEY `cliente` (`cliente`),
-  ADD KEY `cliente_2` (`cliente`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_dep_cliente` (`cliente_id`),
+  ADD KEY `idx_fecha` (`fecha`);
 
 --
 -- Indices de la tabla `pago_servicios`
 --
 ALTER TABLE `pago_servicios`
-  ADD PRIMARY KEY (`cod_pag`),
-  ADD KEY `cliente` (`cliente`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_pag_cliente` (`cliente_id`),
+  ADD KEY `idx_fecha` (`fecha`);
 
 --
 -- Indices de la tabla `retiros`
 --
 ALTER TABLE `retiros`
-  ADD PRIMARY KEY (`cod_ret`),
-  ADD KEY `cliente` (`cliente`),
-  ADD KEY `cliente_2` (`cliente`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_ret_cliente` (`cliente_id`),
+  ADD KEY `idx_fecha` (`fecha`);
 
 --
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `usuario` (`usuario`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
+-- AUTO_INCREMENT de la tabla `clientes`
+--
+ALTER TABLE `clientes`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `depositos`
 --
 ALTER TABLE `depositos`
-  MODIFY `cod_dep` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT de la tabla `pago_servicios`
 --
 ALTER TABLE `pago_servicios`
-  MODIFY `cod_pag` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `retiros`
 --
 ALTER TABLE `retiros`
-  MODIFY `cod_ret` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- Restricciones para tablas volcadas
 --
@@ -200,19 +227,20 @@ ALTER TABLE `usuarios`
 -- Filtros para la tabla `depositos`
 --
 ALTER TABLE `depositos`
-  ADD CONSTRAINT `depositos_ibfk_1` FOREIGN KEY (`cliente`) REFERENCES `cliente` (`n_cuenta`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_dep_cliente` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `pago_servicios`
 --
 ALTER TABLE `pago_servicios`
-  ADD CONSTRAINT `pago_servicios_ibfk_1` FOREIGN KEY (`cliente`) REFERENCES `cliente` (`n_cuenta`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_pag_cliente` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `retiros`
 --
 ALTER TABLE `retiros`
-  ADD CONSTRAINT `retiros_ibfk_1` FOREIGN KEY (`cliente`) REFERENCES `cliente` (`n_cuenta`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_ret_cliente` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
